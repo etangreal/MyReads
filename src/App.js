@@ -2,17 +2,7 @@ import React from 'react';
 import { bindAll } from 'lodash';
 // import * as BooksAPI from './BooksAPI'
 import './App.css';
-
-const SectionEnum = {
-    CURRENTLY_READING: 1,
-    WANT_TO_READ: 2,
-    READ: 3,
-    props: {
-      1: {key: 'CURRENTLY_READING', name: 'Currently Reading', value: 1},
-      2: {key: 'WANT_TO_READ', name: 'Want to Read', value: 2},
-      3: {key: 'READ', name: "Read", value: 3}
-    }
-  };
+import SectionEnum from './utils/SectionEnum';
 
 class BooksApp extends React.Component {
 
