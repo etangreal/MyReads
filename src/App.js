@@ -113,9 +113,11 @@ class BooksApp extends React.Component {
 
   BookList() {
     const { addBook, Bookshelf, books } = this,
-      currentlyReading = books.filter((book) => book.section === SectionEnum.CURRENTLY_READING),
-      wantToRead = books.filter((book) => book.section === SectionEnum.WANT_TO_READ),
-      read = books.filter((book) => book.section === SectionEnum.READ);
+      bookshelves = SectionEnum.asList.map(section => Bookshelf({
+        key: section.key,
+        title: section.name,
+        books: books.filter((book) => book.section === section.key)
+      }));
 
     return (
       <div className="list-books">
@@ -124,9 +126,7 @@ class BooksApp extends React.Component {
         </div>
         <div className="list-books-content">
           <div>
-            { Bookshelf('Currently Reading', currentlyReading) }
-            { Bookshelf('Want to Read', wantToRead) }
-            { Bookshelf('Read', read) }
+            {bookshelves}
           </div>
         </div>
         <div className="open-search">
@@ -136,14 +136,14 @@ class BooksApp extends React.Component {
     )
   }
 
-  Bookshelf(title, books) {
+  Bookshelf({key, title, books}) {
     const { Book } = this,
       booklist = books.map((book) => {
         return <li key={book.key}>{Book(book)}</li>
       });
 
     return (
-      <div className="bookshelf">
+      <div key={key} className="bookshelf">
         <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
