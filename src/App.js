@@ -113,11 +113,13 @@ class BooksApp extends React.Component {
 
   BookList() {
     const { addBook, Bookshelf, books } = this,
-      bookshelves = SectionEnum.asList.map(section => Bookshelf({
-        key: section.key,
-        title: section.name,
-        books: books.filter((book) => book.section === section.key)
-      }));
+      bookshelves = SectionEnum.asList
+        .filter(section => section.key !== SectionEnum.NONE)
+        .map(section => Bookshelf({
+          key: section.key,
+          title: section.name,
+          books: books.filter((book) => book.section === section.key)
+        }));
 
     return (
       <div className="list-books">
