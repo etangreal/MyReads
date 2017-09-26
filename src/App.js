@@ -1,5 +1,5 @@
 import React from 'react';
-import { bindAll } from 'lodash';
+import { bindAll, noop } from 'lodash';
 // import * as BooksAPI from './BooksAPI'
 import './App.css';
 import SectionEnum from './utils/SectionEnum';
@@ -69,6 +69,7 @@ class BooksApp extends React.Component {
       'BookList',
       'Bookshelf',
       'Book',
+      'Selection',
       'Select',
       'addBook',
       'closeSearch'
@@ -157,7 +158,7 @@ class BooksApp extends React.Component {
   }
 
   Book({url, title, author}) {
-    const { Select } = this;
+    const { Selection } = this;
 
     return (
       <div className="book">
@@ -170,7 +171,7 @@ class BooksApp extends React.Component {
             }}>
           </div>
           <div className="book-shelf-changer">
-            { Select() }
+            { Selection() }
           </div>
         </div>
         <div className="book-title">{title}</div>
@@ -179,15 +180,51 @@ class BooksApp extends React.Component {
     );
   }
 
-  Select() {
+  Selection() {
+    const { Select, Option, onSelectionChange: onChange } = this,
+      { items, defaultValue } = this.SelctionItems();
+
+    return Select({items, defaultValue, onChange}, {Option});
+  }
+
+  SelctionItems() {
+    const { none, currentlyReading, wantToRead, read } = SectionEnum,
+      items = [
+        {key: '', value: '', name: 'Move to..', disabled: true},
+        {key: currentlyReading.key, value: currentlyReading.key, name: currentlyReading.name},
+        {key: wantToRead.key, value: wantToRead.key, name: wantToRead.name},
+        {key: read.key, value: read.key, name: read.name},
+        {key: none.key, value: none.key, name: none.name},
+      ];
+
+    return {
+      items,
+      defaultValue: currentlyReading.key
+    };
+  }
+
+  onSelectionChange(value) {
+    console.log('selected: ', value);
+  }
+
+  Select({items=[], defaultValue='', onChange=noop}={}, {Option=noop}={}) {
     return (
-      <select>
-        <option value="none" disabled>Move to...</option>
-        <option value="currentlyReading">Currently Reading</option>
-        <option value="wantToRead">Want to Read</option>
-        <option value="read">Read</option>
-        <option value="none">None</option>
-      </select>
+      <select
+        defaultValue={defaultValue}
+        onChange={(e) => onChange(e.target.value)}
+      >{items.map(Option)}</select>
+    );
+  }
+
+  Option({key, value, name, disabled}) {
+    const props = {disabled};
+
+    return (
+      <option
+        key={key}
+        value={value}
+        {...props}
+      >{name}</option>
     );
   }
 
