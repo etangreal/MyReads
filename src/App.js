@@ -4,6 +4,12 @@ import { bindAll, noop } from 'lodash';
 import './App.css';
 import SectionEnum from './utils/SectionEnum';
 
+function sortBookByTitle(x, y) {
+  if (x.title < y.title) return -1;
+  if (x.title > y.title) return 1;
+  return 0;
+}
+
 class BooksApp extends React.Component {
 
   state = {
@@ -120,7 +126,8 @@ class BooksApp extends React.Component {
         .map(section => Bookshelf({
           key: section.key,
           title: section.name,
-          books: books.filter((book) => book.section === section.key)
+          section: section.key,
+          books: books.filter((book) => book.section === section.key).sort(sortBookByTitle)
         }));
 
     return (
@@ -140,7 +147,7 @@ class BooksApp extends React.Component {
     )
   }
 
-  Bookshelf({key, title, books}) {
+  Bookshelf({key, title, section, books}) {
     const { Book } = this,
       booklist = books.map((book) => {
         return <li key={book.key}>{Book(book)}</li>
@@ -158,7 +165,7 @@ class BooksApp extends React.Component {
     );
   }
 
-  Book({url, title, author}) {
+  Book({key, url, title, author, section}) {
     const { Selection } = this;
 
     return (
@@ -172,7 +179,7 @@ class BooksApp extends React.Component {
             }}>
           </div>
           <div className="book-shelf-changer">
-            { Selection() }
+            { Selection({key, section}) }
           </div>
         </div>
         <div className="book-title">{title}</div>
@@ -181,11 +188,12 @@ class BooksApp extends React.Component {
     );
   }
 
-  Selection() {
-    const { Select, Option, onSelectionChange: onChange } = this,
-      { items, defaultValue } = this.SelctionItems();
+  Selection({key, section}) {
+    const { Select, Option } = this,
+      items = this.SelctionItems(),
+      onChange = this.onSelectionChange.bind(this, key);
 
-    return Select({items, defaultValue, onChange}, {Option});
+    return Select({items, defaultValue: section, onChange}, {Option});
   }
 
   SelctionItems() {
@@ -198,14 +206,15 @@ class BooksApp extends React.Component {
         {key: none.key, value: none.key, name: none.name},
       ];
 
-    return {
-      items,
-      defaultValue: currentlyReading.key
-    };
+    return items;
   }
 
-  onSelectionChange(value) {
-    console.log('selected: ', value);
+  onSelectionChange(key, value) {
+    const { books } = this.state,
+      index = books.findIndex(x => x.key === key);
+
+    books[index].section = Number(value);
+    this.setState({books});
   }
 
   Select({items=[], defaultValue='', onChange=noop}={}, {Option=noop}={}) {
