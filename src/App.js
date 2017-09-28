@@ -125,7 +125,7 @@ class BooksApp extends React.Component {
         .filter(shelfEnum => shelfEnum.id !== ShelfEnum.NONE)
         .map(shelfEnum => Bookshelf({
           shelfId: shelfEnum.id,
-          title: shelfEnum.name,
+          shelfName: shelfEnum.name,
           books: books.filter((book) => book.shelfId === shelfEnum.id).sort(sortBookByTitle)
         }));
 
@@ -146,7 +146,7 @@ class BooksApp extends React.Component {
     )
   }
 
-  Bookshelf({shelfId, title, books}) {
+  Bookshelf({shelfId, shelfName, books}) {
     const { Book } = this,
       booklist = books.map((book) => {
         return <li key={book.id}>{Book(book)}</li>
@@ -154,7 +154,7 @@ class BooksApp extends React.Component {
 
     return (
       <div key={shelfId} className="bookshelf">
-        <h2 className="bookshelf-title">{title}</h2>
+        <h2 className="bookshelf-title">{shelfName}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
             { booklist }
