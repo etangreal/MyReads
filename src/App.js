@@ -164,7 +164,7 @@ class BooksApp extends React.Component {
     );
   }
 
-  Book({id, url, title, author, shelf}) {
+  Book({id, url, title, author, shelfId}) {
     const { Selection } = this;
 
     return (
@@ -178,7 +178,7 @@ class BooksApp extends React.Component {
             }}>
           </div>
           <div className="book-shelf-changer">
-            { Selection({id, shelf}) }
+            { Selection({id, shelfId}) }
           </div>
         </div>
         <div className="book-title">{title}</div>
@@ -187,12 +187,12 @@ class BooksApp extends React.Component {
     );
   }
 
-  Selection({id, shelf}) {
+  Selection({id, shelfId}) {
     const { Select, Option } = this,
       items = this.SelctionItems(),
       onChange = this.onSelectionChange.bind(this, id);
 
-    return Select({items, defaultValue: shelf, onChange}, {Option});
+    return Select({items, defaultValue: shelfId, onChange}, {Option});
   }
 
   SelctionItems() {
