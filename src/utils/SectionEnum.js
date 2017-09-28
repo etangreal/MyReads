@@ -6,10 +6,26 @@ const Enum = {
   },
 
   Props = {
-    [Enum.NONE]: {id: Enum.NONE, enum: 'NONE', name: 'None'},
-    [Enum.CURRENTLY_READING]: {id: Enum.CURRENTLY_READING, enum: 'CURRENTLY_READING', name: 'Currently Reading'},
-    [Enum.WANT_TO_READ]: {id: Enum.WANT_TO_READ, enum: 'WANT_TO_READ', name: 'Want to Read'},
-    [Enum.READ]: {id: Enum.READ, enum: 'READ', name: 'Read'}
+    [Enum.NONE]: {
+      id: Enum.NONE,
+      enum: 'NONE',
+      name: 'None'
+    },
+    [Enum.CURRENTLY_READING]: {
+      id: Enum.CURRENTLY_READING,
+      enum: 'CURRENTLY_READING',
+      name: 'Currently Reading'
+    },
+    [Enum.WANT_TO_READ]: {
+      id: Enum.WANT_TO_READ,
+      enum: 'WANT_TO_READ',
+      name: 'Want to Read'
+    },
+    [Enum.READ]: {
+      id: Enum.READ,
+      enum: 'READ',
+      name: 'Read'
+    }
   };
 
 export default {
