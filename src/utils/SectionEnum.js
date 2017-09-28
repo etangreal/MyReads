@@ -5,6 +5,13 @@ const Enum = {
     READ: 3
   },
 
+  EnumStr = {
+    'none': Enum.NONE,
+    'currentlyReading': Enum.CURRENTLY_READING,
+    'wantToRead': Enum.WANT_TO_READ,
+    'read': Enum.READ
+  },
+
   Props = {
     [Enum.NONE]: {
       id: Enum.NONE,
@@ -30,6 +37,10 @@ const Enum = {
 
 export default {
   ...Enum,
+
+  strToId: function(enumStr) {
+    return EnumStr[enumStr] || Enum.NONE;
+  },
 
   none: Props[Enum.NONE],
   currentlyReading: Props[Enum.CURRENTLY_READING],
