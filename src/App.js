@@ -1,5 +1,7 @@
 import React from 'react';
 import { bindAll, noop } from 'lodash';
+import { Link } from 'react-router-dom';
+
 // import * as BooksAPI from './BooksAPI'
 import './App.css';
 import ShelfEnum from './utils/ShelfEnum';
@@ -140,7 +142,10 @@ class BooksApp extends React.Component {
           </div>
         </div>
         <div className="open-search">
-          <a onClick={addBook}>Add a book</a>
+          <Link
+            to="/add-book"
+            onClick={addBook}
+          >Add a book</Link>
         </div>
       </div>
     )
