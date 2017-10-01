@@ -1,6 +1,6 @@
 import React from 'react';
 import { bindAll, noop } from 'lodash';
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 
 // import * as BooksAPI from './BooksAPI'
 import './App.css';
@@ -15,14 +15,6 @@ function sortBookByTitle(x, y) {
 class BooksApp extends React.Component {
 
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false,
-
     books: [{
         id: 1,
         shelfId: ShelfEnum.CURRENTLY_READING,
@@ -77,9 +69,7 @@ class BooksApp extends React.Component {
       'Bookshelf',
       'Book',
       'Selection',
-      'Select',
-      'addBook',
-      'closeSearch'
+      'Select'
     );
   }
 
@@ -88,18 +78,22 @@ class BooksApp extends React.Component {
 
     return (
       <div className="app">
-        { this.state.showSearchPage ? Search() : BookList() }
+        <Route exact path='/' render={() => (
+          <BookList />
+        )} />
+
+        <Route path='/add-book' render={() => (
+          <Search />
+        )} />
       </div>
     )
   }
 
   Search() {
-    const { closeSearch } = this;
-
     return (
       <div className="search-books">
         <div className="search-books-bar">
-          <a className="close-search" onClick={closeSearch}>Close</a>
+          <Link to="/" className="close-search">Close</Link>
           <div className="search-books-input-wrapper">
             {/*
               NOTES: The search from BooksAPI is limited to a particular set of search terms.
@@ -120,7 +114,7 @@ class BooksApp extends React.Component {
   }
 
   BookList() {
-    const { addBook, Bookshelf } = this,
+    const { Bookshelf } = this,
       { books } = this.state,
 
       bookshelves = ShelfEnum.asList
@@ -142,10 +136,7 @@ class BooksApp extends React.Component {
           </div>
         </div>
         <div className="open-search">
-          <Link
-            to="/add-book"
-            onClick={addBook}
-          >Add a book</Link>
+          <Link to="/add-book">Add a book</Link>
         </div>
       </div>
     )
@@ -240,20 +231,6 @@ class BooksApp extends React.Component {
         {...props}
       >{name}</option>
     );
-  }
-
-  // ----------------------------------------------------------------------------------------------
-
-  closeSearch() {
-    this.setState({
-      showSearchPage: false
-    });
-  }
-
-  addBook() {
-    this.setState({
-      showSearchPage: true
-    });
   }
 
 }
