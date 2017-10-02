@@ -38,7 +38,7 @@ const Enum = {
 export default {
   ...Enum,
 
-  strToId: function(enumStr) {
+  Id: function(enumStr) {
     return EnumStr[enumStr] || Enum.NONE;
   },
 
