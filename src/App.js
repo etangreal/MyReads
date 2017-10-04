@@ -2,10 +2,9 @@ import React from 'react';
 import { bindAll, noop } from 'lodash';
 import { Link, Route } from 'react-router-dom';
 
-// import * as BooksAPI from './BooksAPI'
-import './App.css';
+import * as BooksAPI from './BooksAPI';
 import ShelfEnum from './utils/ShelfEnum';
-import booksData from './books.data.js';
+import './App.css';
 
 function sortBookByTitle(x, y) {
   if (x.title < y.title) return -1;
@@ -15,16 +14,12 @@ function sortBookByTitle(x, y) {
 
 class BooksApp extends React.Component {
 
+  state = {
+    books: []
+  }
+
   constructor(props) {
     super(props);
-
-    const books = booksData.map(book => {
-      return {...book,
-        shelfId: ShelfEnum.Id(book.shelf)
-      };
-    });
-
-    this.state = {books};
 
     bindAll(this,
       'Search',
@@ -34,6 +29,18 @@ class BooksApp extends React.Component {
       'Selection',
       'Select'
     );
+  }
+
+  componentDidMount() {
+    BooksAPI.getAll().then(books => {
+      this.setState({
+        books: books.map(book => {
+          return {...book,
+            shelfId: ShelfEnum.Id(book.shelf)
+          };
+        })
+      })
+    });
   }
 
   render() {
@@ -123,8 +130,9 @@ class BooksApp extends React.Component {
     );
   }
 
-  Book({id, previewLink, title, authors, shelfId}) {
-    const { Selection } = this;
+  Book({id, imageLinks, title, authors, shelfId}) {
+    const { Selection } = this,
+      url = 'url("'+ imageLinks.smallThumbnail + '")';
 
     return (
       <div className="book">
@@ -133,7 +141,7 @@ class BooksApp extends React.Component {
             style={{
               width: 128,
               height: 193,
-              backgroundImage: previewLink
+              backgroundImage: url
             }}>
           </div>
           <div className="book-shelf-changer">
