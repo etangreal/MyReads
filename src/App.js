@@ -15,6 +15,7 @@ function sortBookByTitle(x, y) {
 class BooksApp extends React.Component {
 
   state = {
+    search: '',
     books: []
   }
 
@@ -23,6 +24,7 @@ class BooksApp extends React.Component {
 
     bindAll(this,
       'Search',
+      'onChangeSearch',
       'BookList',
       'Bookshelf',
       'Book',
@@ -60,6 +62,9 @@ class BooksApp extends React.Component {
   }
 
   Search() {
+    const { search } = this.state,
+      { onChangeSearch } = this;
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -73,7 +78,12 @@ class BooksApp extends React.Component {
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <input type="text" placeholder="Search by title or author"/>
+            <input
+              type="text"
+              placeholder="Search by title or author"
+              value={search}
+              onChange={(e) => onChangeSearch(e.target.value)}
+            />
           </div>
         </div>
         <div className="search-books-results">
@@ -204,6 +214,10 @@ class BooksApp extends React.Component {
         {...props}
       >{name}</option>
     );
+  }
+
+  onChangeSearch(search) {
+    this.setState({search});
   }
 
 }
