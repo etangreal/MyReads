@@ -32,8 +32,8 @@ class BooksApp extends React.Component {
       'BookList',
       'Bookshelf',
       'Book',
-      'Selection',
-      'Select'
+      'Select',
+      'onChangeSelection'
     );
 
     this.debouncedExecuteSearch = debounce(this.ExecuteSearch, 300);
@@ -121,9 +121,10 @@ class BooksApp extends React.Component {
   }
 
   Bookshelf({shelfId, shelfName, books}) {
-    const { Book } = this,
+    const { Book, onChangeSelection: onChange } = this,
+
       booklist = books.map((book) => {
-        return <li key={book.id}>{Book(book)}</li>
+        return <li key={book.id}>{Book({...book, onChange})}</li>
       });
 
     return (
@@ -138,22 +139,38 @@ class BooksApp extends React.Component {
     );
   }
 
-  Book({id, imageLinks, title, authors, shelfId}) {
-    const { Selection } = this,
-      url = 'url("'+ imageLinks.smallThumbnail + '")';
+  Book({
+    id='',
+    shelfId='',
+    imageLinks={smallThumbnail: ''},
+    title='',
+    authors=[],
+    onChange=noop
+  }={}) {
+    const { Select, Option } = this,
+      url = 'url("'+ imageLinks.smallThumbnail + '")',
+      style = {
+        width: 128,
+        height: 193,
+        backgroundImage: url
+      },
+
+      items = this.SelectionItems(),
+      Selection = Select({
+        items,
+        defaultValue: shelfId,
+        onChange: (shelfId) => onChange(id, shelfId),
+        Option
+      });
 
     return (
       <div className="book">
         <div className="book-top">
           <div className="book-cover"
-            style={{
-              width: 128,
-              height: 193,
-              backgroundImage: url
-            }}>
+            style={style}>
           </div>
           <div className="book-shelf-changer">
-            { Selection({id, shelfId}) }
+            {Selection}
           </div>
         </div>
         <div className="book-title">{title}</div>
@@ -164,15 +181,7 @@ class BooksApp extends React.Component {
     );
   }
 
-  Selection({id, shelfId}) {
-    const { Select, Option } = this,
-      items = this.SelctionItems(),
-      onChange = this.onSelectionChange.bind(this, id);
-
-    return Select({items, defaultValue: shelfId, onChange}, {Option});
-  }
-
-  SelctionItems() {
+  SelectionItems() {
     const { none, currentlyReading, wantToRead, read } = ShelfEnum,
       items = [
         {id: '', value: '', name: 'Move to..', disabled: true},
@@ -185,7 +194,7 @@ class BooksApp extends React.Component {
     return items;
   }
 
-  onSelectionChange(id, shelfId) {
+  onChangeSelection(id, shelfId) {
     const { books } = this.state,
       index = books.findIndex(x => x.id === id);
 
@@ -193,7 +202,12 @@ class BooksApp extends React.Component {
     this.setState({books});
   }
 
-  Select({items=[], defaultValue='', onChange=noop}={}, {Option=noop}={}) {
+  Select({
+    items=[],
+    defaultValue='',
+    onChange=noop,
+    Option=noop
+  }={}) {
     return (
       <select
         defaultValue={defaultValue}
