@@ -16,7 +16,7 @@ class BooksApp extends React.Component {
 
   state = {
     search: '',
-    results: {},
+    results: [],
 
     books: []
   }
@@ -220,11 +220,18 @@ class BooksApp extends React.Component {
       { setState } = this;
 
     if (!search)
-      setState({results: {}})
+      setState({results: []})
     else
       BooksAPI
         .search(search, MAX_RESULTS)
-        .then(results => setState({results}));
+        .then(results => {
+          if (!results.error) {
+            results.map(book => book.shelfId = ShelfEnum.Id(book.shelf))
+            setState({results})
+          } else {
+            setState({results: []})
+          }
+        });
   }
 
   onChangeSearch(search) {
