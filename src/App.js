@@ -33,7 +33,8 @@ class BooksApp extends React.Component {
       'Bookshelf',
       'Book',
       'Select',
-      'onChangeSelection'
+      'onChangeSelection',
+      'onChangeSearchSelection'
     );
 
     this.debouncedExecuteSearch = debounce(this.ExecuteSearch, 300);
@@ -68,8 +69,13 @@ class BooksApp extends React.Component {
   }
 
   Search() {
-    const { search } = this.state,
-      { onChangeSearch } = this;
+    const { search, results } = this.state,
+      { onChangeSearch, Book, onChangeSearchSelection: onChange } = this,
+
+      searchResults = !results.error && results.map((book) => {
+        book.shelfId = ShelfEnum.Id(book.shelf);
+        return <li key={book.id}>{Book({...book, onChange})}</li>
+      });
 
     return (
       <div className="search-books">
@@ -85,7 +91,7 @@ class BooksApp extends React.Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid"></ol>
+          <ol className="books-grid">{searchResults}</ol>
         </div>
       </div>
     );
@@ -250,6 +256,19 @@ class BooksApp extends React.Component {
 
   onChangeSearch(search) {
     this.setState({search}, this.debouncedExecuteSearch);
+  }
+
+  onChangeSearchSelection(id, shelfId) {
+    const { books, results } = this.state,
+      booksId = books.findIndex(x => x.id === id),
+      resultsId = results.findIndex(x => x.id === id);
+
+      if (booksId > 0)
+        books[booksId].shelfId = Number(shelfId);
+      else {
+        results[resultsId].shelfId = Number(shelfId);
+        books.push(results[resultsId]);
+      }
   }
 
 }
