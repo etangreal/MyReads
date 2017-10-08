@@ -1,5 +1,5 @@
 import React from 'react';
-import { bindAll, noop } from 'lodash';
+import { bindAll, noop, debounce } from 'lodash';
 import { Link, Route } from 'react-router-dom';
 
 import * as BooksAPI from './BooksAPI';
@@ -16,6 +16,8 @@ class BooksApp extends React.Component {
 
   state = {
     search: '',
+    results: {},
+
     books: []
   }
 
@@ -23,14 +25,18 @@ class BooksApp extends React.Component {
     super(props);
 
     bindAll(this,
+      'setState',
       'Search',
       'onChangeSearch',
+      'ExecuteSearch',
       'BookList',
       'Bookshelf',
       'Book',
       'Selection',
       'Select'
     );
+
+    this.debouncedExecuteSearch = debounce(this.ExecuteSearch, 300);
   }
 
   componentDidMount() {
@@ -216,8 +222,21 @@ class BooksApp extends React.Component {
     );
   }
 
+  ExecuteSearch() {
+    const MAX_RESULTS = 10,
+      { search } = this.state,
+      { setState } = this;
+
+    if (!search)
+      setState({results: {}})
+    else
+      BooksAPI
+        .search(search, MAX_RESULTS)
+        .then(results => setState({results}));
+  }
+
   onChangeSearch(search) {
-    this.setState({search});
+    this.setState({search}, this.debouncedExecuteSearch);
   }
 
 }
