@@ -1,7 +1,7 @@
 import React from 'react';
-import { bindAll, noop, debounce } from 'lodash';
+import { bindAll, debounce } from 'lodash';
 import { Link, Route } from 'react-router-dom';
-import Select from './Select';
+import Book from './Book';
 
 import * as BooksAPI from './BooksAPI';
 import ShelfEnum from './utils/ShelfEnum';
@@ -32,7 +32,6 @@ class BooksApp extends React.Component {
       'ExecuteSearch',
       'BookList',
       'Bookshelf',
-      'Book',
       'onChangeSelection',
       'onChangeSearchSelection'
     );
@@ -70,11 +69,12 @@ class BooksApp extends React.Component {
 
   Search() {
     const { search, results } = this.state,
-      { onChangeSearch, Book, onChangeSearchSelection: onChange } = this,
+      { onChangeSearch, onChangeSearchSelection: onChange } = this,
+      shelves = this.getShelves(),
 
       searchResults = !results.error && results.map((book) => {
         book.shelfId = ShelfEnum.Id(book.shelf);
-        return <li key={book.id}>{Book({...book, onChange})}</li>
+        return <li key={book.id}>{Book({...book, shelves, onChange})}</li>
       });
 
     return (
@@ -127,10 +127,11 @@ class BooksApp extends React.Component {
   }
 
   Bookshelf({shelfId, shelfName, books}) {
-    const { Book, onChangeSelection: onChange } = this,
+    const { onChangeSelection: onChange } = this,
+      shelves = this.getShelves(),
 
       booklist = books.map((book) => {
-        return <li key={book.id}>{Book({...book, onChange})}</li>
+        return <li key={book.id}>{Book({...book, shelves, onChange})}</li>
       });
 
     return (
@@ -141,45 +142,6 @@ class BooksApp extends React.Component {
             { booklist }
           </ol>
         </div>
-      </div>
-    );
-  }
-
-  Book({
-    id='',
-    shelfId='',
-    imageLinks={smallThumbnail: ''},
-    title='',
-    authors=[],
-    onChange=noop
-  }={}) {
-    const url = 'url("'+ imageLinks.smallThumbnail + '")',
-      style = {
-        width: 128,
-        height: 193,
-        backgroundImage: url
-      },
-
-      Selection = Select({
-        items: this.getShelves(),
-        defaultValue: shelfId,
-        onChange: (shelfId) => onChange(id, shelfId)
-      });
-
-    return (
-      <div className="book">
-        <div className="book-top">
-          <div className="book-cover"
-            style={style}>
-          </div>
-          <div className="book-shelf-changer">
-            {Selection}
-          </div>
-        </div>
-        <div className="book-title">{title}</div>
-        <div className="book-authors">{authors.map((author, index) => {
-          return authors.length === index + 1 ? author : author + ', '
-        })}</div>
       </div>
     );
   }
