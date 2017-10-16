@@ -4,7 +4,7 @@ import { noop } from 'lodash'
 import ShelfEnum, { shelves } from './utils/ShelfEnum'
 import Bookshelf from './Bookshelf'
 
-function sortBookByTitle(x, y) {
+const sortBookByTitle = (x, y) => {
   if (x.title < y.title) return -1;
   if (x.title > y.title) return 1;
   return 0;
