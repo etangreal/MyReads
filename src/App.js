@@ -5,7 +5,7 @@ import Book from './Book';
 import BookList from './BookList';
 
 import * as BooksAPI from './BooksAPI';
-import ShelfEnum from './utils/ShelfEnum';
+import ShelfEnum, { shelves } from './utils/ShelfEnum'
 import './App.css';
 
 class BooksApp extends React.Component {
@@ -46,15 +46,13 @@ class BooksApp extends React.Component {
 
   render() {
     const { Search, onChangeSelection } = this,
-      { books } = this.state,
-      shelves = this.getShelves();
+      { books } = this.state;
 
     return (
       <div className="app">
         <Route exact path='/' render={() => (
           <BookList
             books={books}
-            shelves={shelves}
             onChange={onChangeSelection} />
         )} />
 
@@ -68,11 +66,10 @@ class BooksApp extends React.Component {
   Search() {
     const { search, results } = this.state,
       { onChangeSearch, onChangeSearchSelection: onChange } = this,
-      shelves = this.getShelves(),
 
       searchResults = !results.error && results.map((book) => {
         book.shelfId = ShelfEnum.Id(book.shelf);
-        return <li key={book.id}>{Book({...book, shelves, onChange})}</li>
+        return <li key={book.id}>{Book({...book, shelves: shelves(), onChange})}</li>
       });
 
     return (
@@ -93,19 +90,6 @@ class BooksApp extends React.Component {
         </div>
       </div>
     );
-  }
-
-  getShelves() {
-    const { none, currentlyReading, wantToRead, read } = ShelfEnum,
-      items = [
-        {id: '', value: '', name: 'Move to..', disabled: true},
-        {id: currentlyReading.id, value: currentlyReading.id, name: currentlyReading.name},
-        {id: wantToRead.id, value: wantToRead.id, name: wantToRead.name},
-        {id: read.id, value: read.id, name: read.name},
-        {id: none.id, value: none.id, name: none.name},
-      ];
-
-    return items;
   }
 
   onChangeSelection(id, shelfId) {

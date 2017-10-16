@@ -35,7 +35,7 @@ const Enum = {
     }
   };
 
-export default {
+const ShelfEnum = {
   ...Enum,
 
   Id: function(enumStr) {
@@ -50,3 +50,18 @@ export default {
   props: Props,
   asList: Object.values(Props)
 };
+
+export const shelves = () => {
+  const { none, currentlyReading, wantToRead, read } = ShelfEnum,
+    items = [
+      {id: '', value: '', name: 'Move to..', disabled: true},
+      {id: currentlyReading.id, value: currentlyReading.id, name: currentlyReading.name},
+      {id: wantToRead.id, value: wantToRead.id, name: wantToRead.name},
+      {id: read.id, value: read.id, name: read.name},
+      {id: none.id, value: none.id, name: none.name},
+    ];
+
+  return items;
+}
+
+export default ShelfEnum;

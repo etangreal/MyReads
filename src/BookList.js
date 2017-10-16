@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { noop } from 'lodash'
-import ShelfEnum from './utils/ShelfEnum'
+import ShelfEnum, { shelves } from './utils/ShelfEnum'
 import Bookshelf from './Bookshelf'
 
 function sortBookByTitle(x, y) {
@@ -49,6 +49,7 @@ const BookList = ({
 
 export default (props) => {
   return BookList({ ...props,
+    shelves: props.shelves || shelves(),
     ShelfEnum: props.ShelfEnum || ShelfEnum,
     Bookshelf: props.Bookshelf || Bookshelf
   });
