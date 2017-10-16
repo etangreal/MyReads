@@ -28,4 +28,6 @@ const Option = ({id, value, name, disabled}) => {
     );
 }
 
-export default (props) => Select({ ...props, Option});
+export default (props) => Select({ ...props,
+    Option: props.Option || Option
+});
