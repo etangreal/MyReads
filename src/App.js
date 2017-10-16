@@ -208,9 +208,12 @@ class BooksApp extends React.Component {
   }
 
   Select({
+    // parameters
     items=[],
     defaultValue='',
     onChange=noop,
+
+    // context
     Option=noop
   }={}) {
     return (
