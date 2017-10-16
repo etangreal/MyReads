@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindAll, noop, debounce } from 'lodash';
 import { Link, Route } from 'react-router-dom';
+import Select from './Select';
 
 import * as BooksAPI from './BooksAPI';
 import ShelfEnum from './utils/ShelfEnum';
@@ -32,7 +33,6 @@ class BooksApp extends React.Component {
       'BookList',
       'Bookshelf',
       'Book',
-      'Select',
       'onChangeSelection',
       'onChangeSearchSelection'
     );
@@ -153,8 +153,7 @@ class BooksApp extends React.Component {
     authors=[],
     onChange=noop
   }={}) {
-    const { Select, Option } = this,
-      url = 'url("'+ imageLinks.smallThumbnail + '")',
+    const url = 'url("'+ imageLinks.smallThumbnail + '")',
       style = {
         width: 128,
         height: 193,
@@ -164,8 +163,7 @@ class BooksApp extends React.Component {
       Selection = Select({
         items: this.getShelves(),
         defaultValue: shelfId,
-        onChange: (shelfId) => onChange(id, shelfId),
-        Option
+        onChange: (shelfId) => onChange(id, shelfId)
       });
 
     return (
@@ -205,35 +203,6 @@ class BooksApp extends React.Component {
 
     books[index].shelfId = Number(shelfId);
     this.setState({books});
-  }
-
-  Select({
-    // parameters
-    items=[],
-    defaultValue='',
-    onChange=noop,
-
-    // context
-    Option=noop
-  }={}) {
-    return (
-      <select
-        defaultValue={defaultValue}
-        onChange={(e) => onChange(e.target.value)}
-      >{items.map(Option)}</select>
-    );
-  }
-
-  Option({id, value, name, disabled}) {
-    const props = {disabled};
-
-    return (
-      <option
-        key={id}
-        value={value}
-        {...props}
-      >{name}</option>
-    );
   }
 
   ExecuteSearch() {
