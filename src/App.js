@@ -2,6 +2,7 @@ import React from 'react';
 import { bindAll, debounce } from 'lodash';
 import { Link, Route } from 'react-router-dom';
 import Book from './Book';
+import Bookshelf from './Bookshelf';
 
 import * as BooksAPI from './BooksAPI';
 import ShelfEnum from './utils/ShelfEnum';
@@ -31,7 +32,6 @@ class BooksApp extends React.Component {
       'onChangeSearch',
       'ExecuteSearch',
       'BookList',
-      'Bookshelf',
       'onChangeSelection',
       'onChangeSearchSelection'
     );
@@ -98,15 +98,18 @@ class BooksApp extends React.Component {
   }
 
   BookList() {
-    const { Bookshelf } = this,
+    const { onChangeSelection } = this,
       { books } = this.state,
+      shelves = this.getShelves(),
 
       bookshelves = ShelfEnum.asList
         .filter(shelfEnum => shelfEnum.id !== ShelfEnum.NONE)
         .map(shelfEnum => Bookshelf({
           shelfId: shelfEnum.id,
           shelfName: shelfEnum.name,
-          books: books.filter((book) => book.shelfId === shelfEnum.id).sort(sortBookByTitle)
+          books: books.filter((book) => book.shelfId === shelfEnum.id).sort(sortBookByTitle),
+          shelves,
+          onChange: onChangeSelection
         }));
 
     return (
@@ -124,26 +127,6 @@ class BooksApp extends React.Component {
         </div>
       </div>
     )
-  }
-
-  Bookshelf({shelfId, shelfName, books}) {
-    const { onChangeSelection: onChange } = this,
-      shelves = this.getShelves(),
-
-      booklist = books.map((book) => {
-        return <li key={book.id}>{Book({...book, shelves, onChange})}</li>
-      });
-
-    return (
-      <div key={shelfId} className="bookshelf">
-        <h2 className="bookshelf-title">{shelfName}</h2>
-        <div className="bookshelf-books">
-          <ol className="books-grid">
-            { booklist }
-          </ol>
-        </div>
-      </div>
-    );
   }
 
   getShelves() {
