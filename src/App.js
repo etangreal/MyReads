@@ -2,17 +2,11 @@ import React from 'react';
 import { bindAll, debounce } from 'lodash';
 import { Link, Route } from 'react-router-dom';
 import Book from './Book';
-import Bookshelf from './Bookshelf';
+import BookList from './BookList';
 
 import * as BooksAPI from './BooksAPI';
 import ShelfEnum from './utils/ShelfEnum';
 import './App.css';
-
-function sortBookByTitle(x, y) {
-  if (x.title < y.title) return -1;
-  if (x.title > y.title) return 1;
-  return 0;
-}
 
 class BooksApp extends React.Component {
 
@@ -31,7 +25,6 @@ class BooksApp extends React.Component {
       'Search',
       'onChangeSearch',
       'ExecuteSearch',
-      'BookList',
       'onChangeSelection',
       'onChangeSearchSelection'
     );
@@ -52,12 +45,17 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    const { Search, BookList } = this;
+    const { Search, onChangeSelection } = this,
+      { books } = this.state,
+      shelves = this.getShelves();
 
     return (
       <div className="app">
         <Route exact path='/' render={() => (
-          <BookList />
+          <BookList
+            books={books}
+            shelves={shelves}
+            onChange={onChangeSelection} />
         )} />
 
         <Route path='/search' render={() => (
@@ -95,38 +93,6 @@ class BooksApp extends React.Component {
         </div>
       </div>
     );
-  }
-
-  BookList() {
-    const { onChangeSelection } = this,
-      { books } = this.state,
-      shelves = this.getShelves(),
-
-      bookshelves = ShelfEnum.asList
-        .filter(shelfEnum => shelfEnum.id !== ShelfEnum.NONE)
-        .map(shelfEnum => Bookshelf({
-          shelfId: shelfEnum.id,
-          shelfName: shelfEnum.name,
-          books: books.filter((book) => book.shelfId === shelfEnum.id).sort(sortBookByTitle),
-          shelves,
-          onChange: onChangeSelection
-        }));
-
-    return (
-      <div className="list-books">
-        <div className="list-books-title">
-          <h1>MyReads</h1>
-        </div>
-        <div className="list-books-content">
-          <div>
-            {bookshelves}
-          </div>
-        </div>
-        <div className="open-search">
-          <Link to="/search">Add a book</Link>
-        </div>
-      </div>
-    )
   }
 
   getShelves() {
