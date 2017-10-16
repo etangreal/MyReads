@@ -161,9 +161,8 @@ class BooksApp extends React.Component {
         backgroundImage: url
       },
 
-      items = this.SelectionItems(),
       Selection = Select({
-        items,
+        items: this.getShelves(),
         defaultValue: shelfId,
         onChange: (shelfId) => onChange(id, shelfId),
         Option
@@ -187,7 +186,7 @@ class BooksApp extends React.Component {
     );
   }
 
-  SelectionItems() {
+  getShelves() {
     const { none, currentlyReading, wantToRead, read } = ShelfEnum,
       items = [
         {id: '', value: '', name: 'Move to..', disabled: true},
