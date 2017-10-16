@@ -2,7 +2,7 @@ import React from 'react'
 import { noop } from 'lodash'
 
 const Select = ({
-    // parameters
+    // props
     items=[],
     defaultValue='',
     onChange=noop,
