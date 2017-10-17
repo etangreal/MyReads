@@ -8,6 +8,24 @@ import * as BooksAPI from './BooksAPI';
 import ShelfEnum from './utils/ShelfEnum'
 import './App.css';
 
+const executeSearch = (search, setState) => {
+  const MAX_RESULTS = 10;
+
+  if (!search)
+    setState({results: []})
+  else
+    BooksAPI
+      .search(search, MAX_RESULTS)
+      .then(results => {
+        if (!results.error) {
+          results.map(book => book.shelfId = ShelfEnum.Id(book.shelf))
+          setState({results})
+        } else {
+          setState({results: []})
+        }
+      });
+}
+
 class BooksApp extends React.Component {
 
   state = {
@@ -23,12 +41,9 @@ class BooksApp extends React.Component {
     bindAll(this,
       'setState',
       'onChangeSearch',
-      'ExecuteSearch',
       'onChangeSelection',
       'onChangeSearchSelection'
     );
-
-    this.debouncedExecuteSearch = debounce(this.ExecuteSearch, 300);
   }
 
   componentDidMount() {
@@ -74,28 +89,8 @@ class BooksApp extends React.Component {
     this.setState({books});
   }
 
-  ExecuteSearch() {
-    const MAX_RESULTS = 10,
-      { search } = this.state,
-      { setState } = this;
-
-    if (!search)
-      setState({results: []})
-    else
-      BooksAPI
-        .search(search, MAX_RESULTS)
-        .then(results => {
-          if (!results.error) {
-            results.map(book => book.shelfId = ShelfEnum.Id(book.shelf))
-            setState({results})
-          } else {
-            setState({results: []})
-          }
-        });
-  }
-
   onChangeSearch(search) {
-    this.setState({search}, this.debouncedExecuteSearch);
+    this.setState({search}, this.executeSearch);
   }
 
   onChangeSearchSelection(id, shelfId) {
@@ -110,6 +105,10 @@ class BooksApp extends React.Component {
         books.push(results[resultsId]);
       }
   }
+
+  executeSearch = debounce(() => {
+    executeSearch(this.state.search, this.setState)
+  }, 200)
 
 }
 
