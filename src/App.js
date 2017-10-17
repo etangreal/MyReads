@@ -1,11 +1,11 @@
 import React from 'react';
 import { bindAll, debounce } from 'lodash';
-import { Link, Route } from 'react-router-dom';
-import Book from './Book';
+import { Route } from 'react-router-dom';
 import BookList from './BookList';
+import Search from './Search';
 
 import * as BooksAPI from './BooksAPI';
-import ShelfEnum, { shelves } from './utils/ShelfEnum'
+import ShelfEnum from './utils/ShelfEnum'
 import './App.css';
 
 class BooksApp extends React.Component {
@@ -22,7 +22,6 @@ class BooksApp extends React.Component {
 
     bindAll(this,
       'setState',
-      'Search',
       'onChangeSearch',
       'ExecuteSearch',
       'onChangeSelection',
@@ -45,8 +44,8 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    const { Search, onChangeSelection } = this,
-      { books } = this.state;
+    const { onChangeSelection, onChangeSearch, onChangeSearchSelection } = this,
+      { search, results, books } = this.state;
 
     return (
       <div className="app">
@@ -57,39 +56,14 @@ class BooksApp extends React.Component {
         )} />
 
         <Route path='/search' render={() => (
-          <Search />
+          <Search
+            search={search}
+            results={results}
+            onChangeSearch={onChangeSearch}
+            onChange={onChangeSearchSelection} />
         )} />
       </div>
     )
-  }
-
-  Search() {
-    const { search, results } = this.state,
-      { onChangeSearch, onChangeSearchSelection: onChange } = this,
-
-      searchResults = !results.error && results.map((book) => {
-        book.shelfId = ShelfEnum.Id(book.shelf);
-        return <li key={book.id}>{Book({...book, shelves: shelves(), onChange})}</li>
-      });
-
-    return (
-      <div className="search-books">
-        <div className="search-books-bar">
-          <Link to="/" className="close-search">Close</Link>
-          <div className="search-books-input-wrapper">
-            <input
-              type="text"
-              placeholder="Search by title or author"
-              value={search}
-              onChange={(e) => onChangeSearch(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="search-books-results">
-          <ol className="books-grid">{searchResults}</ol>
-        </div>
-      </div>
-    );
   }
 
   onChangeSelection(id, shelfId) {
