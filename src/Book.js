@@ -1,19 +1,20 @@
 import React from 'react'
 import { noop } from 'lodash'
 import Select from './Select';
+import { shelves } from './utils/ShelfEnum'
 
 const Book = ({
   // props
   id='',
   shelfId='',
-  shelves=[],
+  shelves,
   imageLinks={smallThumbnail: ''},
   title='',
   authors=[],
   onChange=noop,
 
   // context
-  Select={}
+  Select
 }={}) => {
   const url = 'url("'+ imageLinks.smallThumbnail + '")';
   const style = {
@@ -43,5 +44,6 @@ const Book = ({
 }
 
 export default (props) => Book({ ...props,
+  shelves: props.shelves || shelves(),
   Select: props.Select || Select
 });
