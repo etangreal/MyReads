@@ -1,11 +1,11 @@
-import React from 'react';
-import { bindAll, debounce } from 'lodash';
-import { Route } from 'react-router-dom';
-import BookList from './BookList';
-import Search, { executeSearch } from './Search';
-import * as BooksAPI from './BooksAPI';
-import ShelfEnum from './utils/ShelfEnum'
-import './App.css';
+import React from 'react'
+import { bindAll, debounce } from 'lodash'
+import { Route } from 'react-router-dom'
+import BookList from '../components/BookList'
+import Search, { executeSearch } from '../components/Search'
+import * as BooksAPI from '../api/BooksAPI'
+import ShelfEnum from '../utils/ShelfEnum'
+import './App.css'
 
 class BooksApp extends React.Component {
 

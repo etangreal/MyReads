@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { noop } from 'lodash'
-import ShelfEnum, { shelves } from './utils/ShelfEnum'
-import Bookshelf from './Bookshelf'
+import ShelfEnum, { shelves } from '../../utils/ShelfEnum'
+import Bookshelf from '../Bookshelf'
 
 const sortBookByTitle = (x, y) => {
   if (x.title < y.title) return -1;

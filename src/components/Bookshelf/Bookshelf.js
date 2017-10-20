@@ -1,7 +1,7 @@
 import React from 'react'
 import { noop } from 'lodash'
-import Book from './Book'
-import { shelves } from './utils/ShelfEnum'
+import Book from '../Book'
+import { shelves } from '../../utils/ShelfEnum'
 
 const Bookshelf = ({
   // props

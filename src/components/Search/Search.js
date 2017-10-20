@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { noop } from 'lodash'
-import * as BooksAPI from './BooksAPI';
-import Book from './Book'
-import ShelfEnum, { shelves } from './utils/ShelfEnum'
+import * as BooksAPI from '../../api/BooksAPI';
+import Book from '../Book'
+import ShelfEnum, { shelves } from '../../utils/ShelfEnum'
 
 export const executeSearch = (search, setState) => {
   const MAX_RESULTS = 10;
