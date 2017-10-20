@@ -1,28 +1,38 @@
 import React from 'react'
 import { noop } from 'lodash'
 import Book from './Book'
+import { shelves } from './utils/ShelfEnum'
 
 const Bookshelf = ({
-    shelfId,
-    shelfName='',
-    books=[],
-    shelves=[],
-    onChange=noop
-}={}) => {
-    const booklist = books.map((book) => {
-        return <li key={book.id}>{Book({...book, shelves, onChange})}</li>
-    });
+  // props
+  shelfId,
+  shelfName='',
+  books=[],
+  shelves,
+  onChange=noop,
 
-    return (
-      <div key={shelfId} className="bookshelf">
-        <h2 className="bookshelf-title">{shelfName}</h2>
-        <div className="bookshelf-books">
-          <ol className="books-grid">
-            { booklist }
-          </ol>
-        </div>
+  // context
+  Book
+}={}) => {
+  const booklist = books.map((book) => {
+      return <li key={book.id}>{Book({...book, shelves, onChange})}</li>
+  });
+
+  return (
+    <div key={shelfId} className="bookshelf">
+      <h2 className="bookshelf-title">{shelfName}</h2>
+      <div className="bookshelf-books">
+        <ol className="books-grid">
+          { booklist }
+        </ol>
       </div>
-    );
+    </div>
+  );
 }
 
-export default Bookshelf;
+export default (props) => {
+  return Bookshelf({ ...props,
+    shelves: props.shelves || shelves(),
+    Book: props.Book || Book
+  });
+};
