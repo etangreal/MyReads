@@ -13,12 +13,12 @@ const sortBookByTitle = (x, y) => {
 const BookList = ({
   // props
   books=[],
-  shelves=[],
+  shelves,
   onChange=noop,
 
   // context
-  ShelfEnum=[],
-  Bookshelf={}
+  ShelfEnum,
+  Bookshelf
 }={}) => {
   const bookshelves = ShelfEnum.asList
       .filter(shelfEnum => shelfEnum.id !== ShelfEnum.NONE)
