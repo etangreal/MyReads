@@ -8,7 +8,7 @@ const Select = ({
   onChange=noop,
 
   // context
-  Option=noop
+  Option
 }={}) => (
   <select
     defaultValue={defaultValue}
