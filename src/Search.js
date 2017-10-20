@@ -27,13 +27,13 @@ const Search = ({
   // props
   search='',
   results=[],
-  shelves=[],
+  shelves,
   onChangeSearch=noop,
   onChange=noop,
 
   // context
-  Book={},
-  Link={}
+  Book,
+  Link
 }={}) => {
   const searchResults = !results.error && results.map((book) => {
     book.shelfId = ShelfEnum.Id(book.shelf);
