@@ -22,7 +22,7 @@ class BooksApp extends React.Component {
     bindAll(this,
       'setState',
       'onChangeSearch',
-      'onChangeSelection',
+      'onChangeBookListSelection',
       'onChangeSearchSelection'
     );
   }
@@ -40,15 +40,24 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    const { onChangeSelection, onChangeSearch, onChangeSearchSelection } = this,
-      { search, results, books } = this.state;
+    const {
+      onChangeSearch,
+      onChangeBookListSelection,
+      onChangeSearchSelection
+    } = this;
+
+    const {
+      search,
+      results,
+      books
+    } = this.state;
 
     return (
       <div className="app">
         <Route exact path='/' render={() => (
           <BookList
             books={books}
-            onChange={onChangeSelection} />
+            onChange={onChangeBookListSelection} />
         )} />
 
         <Route path='/search' render={() => (
@@ -62,16 +71,20 @@ class BooksApp extends React.Component {
     )
   }
 
-  onChangeSelection(id, shelfId) {
+  onChangeSearch(search) {
+    this.setState({search}, this.executeSearch);
+  }
+
+  executeSearch = debounce(() => {
+    executeSearch(this.state.search, this.setState)
+  }, 200)
+
+  onChangeBookListSelection(id, shelfId) {
     const { books } = this.state,
       index = books.findIndex(x => x.id === id);
 
     books[index].shelfId = Number(shelfId);
     this.setState({books});
-  }
-
-  onChangeSearch(search) {
-    this.setState({search}, this.executeSearch);
   }
 
   onChangeSearchSelection(id, shelfId) {
@@ -86,10 +99,6 @@ class BooksApp extends React.Component {
         books.push(results[resultsId]);
       }
   }
-
-  executeSearch = debounce(() => {
-    executeSearch(this.state.search, this.setState)
-  }, 200)
 
 }
 
