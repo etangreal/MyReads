@@ -80,11 +80,14 @@ class BooksApp extends React.Component {
   }, 200)
 
   onChangeBookListSelection(id, shelfId) {
-    const { books } = this.state,
-      index = books.findIndex(x => x.id === id);
+    const { books } = this.state;
+    const index = books.findIndex(x => x.id === id);
+    let book = books[index];
 
-    books[index].shelfId = Number(shelfId);
+    book.shelfId = Number(shelfId);
+
     this.setState({books});
+    BooksAPI.update(book, ShelfEnum.Str(book.shelfId))
   }
 
   onChangeSearchSelection(id, shelfId) {
@@ -95,8 +98,12 @@ class BooksApp extends React.Component {
       if (booksId > 0)
         books[booksId].shelfId = Number(shelfId);
       else {
-        results[resultsId].shelfId = Number(shelfId);
-        books.push(results[resultsId]);
+        let book = results[resultsId];
+
+        book.shelfId = Number(shelfId);
+        books.push(book);
+        this.setState({books});
+        BooksAPI.update(book, ShelfEnum.Str(book.shelfId))
       }
   }
 
