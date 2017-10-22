@@ -86,8 +86,7 @@ class BooksApp extends React.Component {
 
     book.shelfId = Number(shelfId);
 
-    this.setState({books});
-    BooksAPI.update(book, ShelfEnum.Str(book.shelfId))
+    this.setState({books}, () => BooksAPI.update(book, ShelfEnum.Str(book.shelfId)) );
   }
 
   onChangeSearchSelection(id, shelfId) {
@@ -102,8 +101,7 @@ class BooksApp extends React.Component {
 
         book.shelfId = Number(shelfId);
         books.push(book);
-        this.setState({books});
-        BooksAPI.update(book, ShelfEnum.Str(book.shelfId))
+        this.setState({books}, () => BooksAPI.update(book, ShelfEnum.Str(book.shelfId)) );
       }
   }
 
