@@ -88,7 +88,7 @@ class BooksApp extends React.Component {
 	let results = JSON.parse(JSON.stringify(this.state.results));
 
     books[booksId].shelfId = Number(shelfId);
-    
+
 	if (resultsId >= 0)
 	    results[resultsId].shelfId = Number(shelfId);
 
@@ -102,9 +102,9 @@ class BooksApp extends React.Component {
 
 	let books = JSON.parse(JSON.stringify(this.state.books));
 	let results = JSON.parse(JSON.stringify(this.state.results));
- 
+
     results[resultsId].shelfId = Number(shelfId);
-    
+
     const book = JSON.parse(JSON.stringify(results[resultsId]));
 
     if (booksId < 0)

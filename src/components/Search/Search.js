@@ -23,6 +23,8 @@ export const executeSearch = (search, setState) => {
       });
 }
 
+const findBookIndex = (books, id) => books.findIndex((book) => book.id === id);
+
 const Search = ({
   // props
   search='',
@@ -37,7 +39,7 @@ const Search = ({
   Link
 }={}) => {
   const searchResults = !results.error && results.map((book) => {
-    const index = books.findIndex(search => search.id === book.id);
+    const index = findBookIndex(books, book.id);
 
     if (index >= 0)
       	book.shelfId = books[index].shelfId;
