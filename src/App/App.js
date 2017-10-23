@@ -104,14 +104,16 @@ class BooksApp extends React.Component {
 	let results = JSON.parse(JSON.stringify(this.state.results));
  
     results[resultsId].shelfId = Number(shelfId);
+    
+    const book = JSON.parse(JSON.stringify(results[resultsId]));
 
     if (booksId < 0)
-	    books.push(results[resultsId]);
+	    books.push(book);
     else
     	books[booksId].shelfId = Number(shelfId);
 
     this.setState({books, results});
-	BooksAPI.update(books[booksId], ShelfEnum.Str(books[booksId].shelfId))
+	BooksAPI.update(book, ShelfEnum.Str(book.shelfId))
   }
 
 }
