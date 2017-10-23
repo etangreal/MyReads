@@ -64,6 +64,7 @@ class BooksApp extends React.Component {
           <Search
             search={search}
             results={results}
+			books={books}
             onChangeSearch={onChangeSearch}
             onChange={onChangeSearchSelection} />
         )} />
@@ -80,29 +81,37 @@ class BooksApp extends React.Component {
   }, 200)
 
   onChangeBookListSelection(id, shelfId) {
-    const { books } = this.state;
-    const index = books.findIndex(x => x.id === id);
-    let book = books[index];
+	const booksId = this.state.books.findIndex(book => book.id === id);
+	const resultsId = this.state.results.findIndex(book => book.id === id);
 
-    book.shelfId = Number(shelfId);
+	let books = JSON.parse(JSON.stringify(this.state.books));
+	let results = JSON.parse(JSON.stringify(this.state.results));
 
-    this.setState({books}, () => BooksAPI.update(book, ShelfEnum.Str(book.shelfId)) );
+    books[booksId].shelfId = Number(shelfId);
+    
+	if (resultsId >= 0)
+	    results[resultsId].shelfId = Number(shelfId);
+
+    this.setState({books, results});
+	BooksAPI.update(books[booksId], ShelfEnum.Str(books[booksId].shelfId))
   }
 
   onChangeSearchSelection(id, shelfId) {
-    const { books, results } = this.state,
-      booksId = books.findIndex(x => x.id === id),
-      resultsId = results.findIndex(x => x.id === id);
+	const booksId = this.state.books.findIndex(book => book.id === id);
+	const resultsId = this.state.results.findIndex(book => book.id === id);
 
-      if (booksId > 0)
-        books[booksId].shelfId = Number(shelfId);
-      else {
-        let book = results[resultsId];
+	let books = JSON.parse(JSON.stringify(this.state.books));
+	let results = JSON.parse(JSON.stringify(this.state.results));
+ 
+    results[resultsId].shelfId = Number(shelfId);
 
-        book.shelfId = Number(shelfId);
-        books.push(book);
-        this.setState({books}, () => BooksAPI.update(book, ShelfEnum.Str(book.shelfId)) );
-      }
+    if (booksId < 0)
+	    books.push(results[resultsId]);
+    else
+    	books[booksId].shelfId = Number(shelfId);
+
+    this.setState({books, results});
+	BooksAPI.update(books[booksId], ShelfEnum.Str(books[booksId].shelfId))
   }
 
 }

@@ -27,6 +27,7 @@ const Search = ({
   // props
   search='',
   results=[],
+  books=[],
   shelves,
   onChangeSearch=noop,
   onChange=noop,
@@ -36,7 +37,14 @@ const Search = ({
   Link
 }={}) => {
   const searchResults = !results.error && results.map((book) => {
-    book.shelfId = ShelfEnum.Id(book.shelf);
+    const index = books.findIndex(search => search.id === book.id);
+
+    if (index >= 0)
+      	book.shelfId = books[index].shelfId;
+
+    if (!book.shelfId) 
+      book.shelfId = ShelfEnum.Id(book.shelf);
+
     return <li key={book.id}>{Book({...book, shelves, onChange})}</li>
   });
 
