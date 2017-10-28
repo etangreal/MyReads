@@ -1,21 +1,6 @@
 import React from 'react'
 import { noop } from 'lodash'
 
-const Select = ({
-  // props
-  items=[],
-  defaultValue='',
-  onChange=noop,
-
-  // context
-  Option
-}={}) => (
-  <select
-    defaultValue={defaultValue}
-    onChange={(e) => onChange(e.target.value)}
-  >{items.map(Option)}</select>
-);
-
 const Option = ({
   // props
   id,
@@ -33,6 +18,21 @@ const Option = ({
     >{name}</option>
   );
 }
+
+const Select = ({
+  // props
+  items=[],
+  defaultValue='',
+  onChange=noop,
+
+  // context
+  Option
+}={}) => (
+  <select
+    defaultValue={defaultValue}
+    onChange={(e) => onChange(e.target.value)}
+  >{items.map(Option)}</select>
+);
 
 export default (props) => Select({ ...props,
     Option: props.Option || Option
