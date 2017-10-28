@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { noop } from 'lodash'
-import * as BooksAPI from '../../api/BooksAPI';
+import * as BooksAPI from '../../api/BooksAPI'
 import Book from '../Book'
 import ShelfEnum, { shelves } from '../../utils/ShelfEnum'
+import { findBookIndex } from '../../utils/common'
 
 export const executeSearch = (search, setState) => {
   const MAX_RESULTS = 10;
@@ -22,8 +23,6 @@ export const executeSearch = (search, setState) => {
         }
       });
 }
-
-const findBookIndex = (books, id) => books.findIndex((book) => book.id === id);
 
 const Search = ({
   // props

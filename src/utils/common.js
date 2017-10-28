@@ -1,0 +1,1 @@
+export const findBookIndex = (books, id) => books.findIndex((book) => book.id === id);
