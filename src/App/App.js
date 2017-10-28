@@ -5,6 +5,7 @@ import BookList from '../components/BookList'
 import Search, { executeSearch } from '../components/Search'
 import * as BooksAPI from '../api/BooksAPI'
 import ShelfEnum from '../utils/ShelfEnum'
+import { findBookIndex } from '../utils/common'
 import './App.css'
 
 class BooksApp extends React.Component {
@@ -81,8 +82,8 @@ class BooksApp extends React.Component {
   }, 200)
 
   onChangeBookListSelection(id, shelfId) {
-	const booksId = this.state.books.findIndex(book => book.id === id);
-	const resultsId = this.state.results.findIndex(book => book.id === id);
+	const booksId = findBookIndex(this.state.books, id);
+	const resultsId = findBookIndex(this.state.results, id);
 
 	let books = JSON.parse(JSON.stringify(this.state.books));
 	let results = JSON.parse(JSON.stringify(this.state.results));
@@ -97,8 +98,8 @@ class BooksApp extends React.Component {
   }
 
   onChangeSearchSelection(id, shelfId) {
-	const booksId = this.state.books.findIndex(book => book.id === id);
-	const resultsId = this.state.results.findIndex(book => book.id === id);
+	const booksId = findBookIndex(this.state.books, id);
+	const resultsId = findBookIndex(this.state.results, id);
 
 	let books = JSON.parse(JSON.stringify(this.state.books));
 	let results = JSON.parse(JSON.stringify(this.state.results));
