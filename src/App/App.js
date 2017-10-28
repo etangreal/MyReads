@@ -5,8 +5,13 @@ import BookList from '../components/BookList'
 import Search, { executeSearch } from '../components/Search'
 import * as BooksAPI from '../api/BooksAPI'
 import ShelfEnum from '../utils/ShelfEnum'
-import { findBookIndex } from '../utils/common'
+import { findBook } from '../utils/common'
 import './App.css'
+
+const updateState = (id, book, result) => state => ({
+  books: state.books.filter(b => b.id !== id).concat(book ? [book] : []),
+  results: state.results.filter(b => b.id !== id).concat(result ? [result] : [])
+})
 
 class BooksApp extends React.Component {
 
@@ -82,39 +87,28 @@ class BooksApp extends React.Component {
   }, 200)
 
   onChangeBookListSelection(id, shelfId) {
-	const booksId = findBookIndex(this.state.books, id);
-	const resultsId = findBookIndex(this.state.results, id);
+	const shelf = ShelfEnum.Str(shelfId);
+	let book = findBook(this.state.books, id);
+	let result = findBook(this.state.results, id);
 
-	let books = JSON.parse(JSON.stringify(this.state.books));
-	let results = JSON.parse(JSON.stringify(this.state.results));
+	book.shelfId = Number(shelfId);
+	if (result) result.shelfId = Number(shelfId);
 
-    books[booksId].shelfId = Number(shelfId);
-
-	if (resultsId >= 0)
-	    results[resultsId].shelfId = Number(shelfId);
-
-    this.setState({books, results});
-	BooksAPI.update(books[booksId], ShelfEnum.Str(books[booksId].shelfId))
+    BooksAPI.update(book, shelf).then(() => this.setState(updateState(id, book, result)));
   }
 
   onChangeSearchSelection(id, shelfId) {
-	const booksId = findBookIndex(this.state.books, id);
-	const resultsId = findBookIndex(this.state.results, id);
+	const shelf = ShelfEnum.Str(shelfId);
+	let book = findBook(this.state.books, id);
+	let result = findBook(this.state.results, id);
 
-	let books = JSON.parse(JSON.stringify(this.state.books));
-	let results = JSON.parse(JSON.stringify(this.state.results));
-
-    results[resultsId].shelfId = Number(shelfId);
-
-    const book = JSON.parse(JSON.stringify(results[resultsId]));
-
-    if (booksId < 0)
-	    books.push(book);
+    result.shelfId = Number(shelfId);
+    if (book)
+		book.shelfId = Number(shelfId);
     else
-    	books[booksId].shelfId = Number(shelfId);
+		book = Object.assign({}, result);
 
-    this.setState({books, results});
-	BooksAPI.update(book, ShelfEnum.Str(book.shelfId))
+    BooksAPI.update(book, shelf).then(() => this.setState(updateState(id, book, result)));
   }
 
 }

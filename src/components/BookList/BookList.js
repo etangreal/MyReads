@@ -2,13 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { noop } from 'lodash'
 import ShelfEnum, { shelves } from '../../utils/ShelfEnum'
+import { sortBooksByTitle } from '../../utils/common'
 import Bookshelf from '../Bookshelf'
-
-const sortBookByTitle = (x, y) => {
-  if (x.title < y.title) return -1;
-  if (x.title > y.title) return 1;
-  return 0;
-}
 
 const BookList = ({
   // props
@@ -25,7 +20,7 @@ const BookList = ({
       .map(shelfEnum => Bookshelf({
         shelfId: shelfEnum.id,
         shelfName: shelfEnum.name,
-        books: books.filter((book) => book.shelfId === shelfEnum.id).sort(sortBookByTitle),
+        books: books.filter((book) => book.shelfId === shelfEnum.id).sort(sortBooksByTitle),
         shelves,
         onChange
       }));

@@ -4,7 +4,7 @@ import { noop } from 'lodash'
 import * as BooksAPI from '../../api/BooksAPI'
 import Book from '../Book'
 import ShelfEnum, { shelves } from '../../utils/ShelfEnum'
-import { findBookIndex } from '../../utils/common'
+import { sortBooksByTitle, findBookIndex } from '../../utils/common'
 
 export const executeSearch = (search, setState) => {
   const MAX_RESULTS = 10;
@@ -37,17 +37,19 @@ const Search = ({
   Book,
   Link
 }={}) => {
-  const searchResults = !results.error && results.map((book) => {
-    const index = findBookIndex(books, book.id);
+  const searchResults = !results.error && results
+	.sort(sortBooksByTitle)
+	.map((book) => {
+	  const index = findBookIndex(books, book.id);
 
-    if (index >= 0)
-      	book.shelfId = books[index].shelfId;
+      if (index >= 0)
+        book.shelfId = books[index].shelfId;
 
-    if (!book.shelfId) 
-      book.shelfId = ShelfEnum.Id(book.shelf);
+	  if (!book.shelfId) 
+		book.shelfId = ShelfEnum.Id(book.shelf);
 
-    return <li key={book.id}>{Book({...book, shelves, onChange})}</li>
-  });
+      return <li key={book.id}>{Book({...book, shelves, onChange})}</li>
+	});
 
   return (
     <div className="search-books">
